@@ -1,135 +1,23 @@
-import * as OolibComponents from "oolib";
+import {
+    useQuery
+} from '@tanstack/react-query';
+import { fetchFormSchema } from "./api";
+import FormItem from "../FormItem";
+import { SkeletonLoader } from "oolib"
 import './index.css';
 
-const formSchema = [
-    {
-        "comp": "TextInput",
-        "isRequired": true,
-        "valuePath": "main.title",
-        "props": {
-            "id": "main.title",
-            "label": "title",
-            "sublabel": "title",
-            "placeholder": "title"
-        }
-    },
-    {
-        "comp": "DropdownSingle",
-        "isRequired": false,
-        "valuePath": "main.dropdown",
-        "props": {
-            "id": "5spum7",
-            "label": "dropdown",
-            "options": [
-                {
-                    "reactKey": "l2OnzF",
-                    "value": "india",
-                    "display": "india"
-                },
-                {
-                    "reactKey": "VVpN7t",
-                    "value": "japan",
-                    "display": "japan"
-                },
-                {
-                    "reactKey": "FLMPvq",
-                    "value": "germany",
-                    "display": "germany"
-                }
-            ]
-        }
-    },
-    {
-        "comp": "TextInput",
-        "isRequired": true,
-        "valuePath": "main.enterTextHere",
-        "props": {
-            "id": "dutnvz",
-            "label": "enter text here"
-        }
-    },
-    {
-        "comp": "CheckboxList",
-        "isRequired": false,
-        "valuePath": "main.checkbox",
-        "props": {
-            "id": "rle96m",
-            "label": "checkbox",
-            "options": [
-                {
-                    "reactKey": "zUO0or",
-                    "value": "japan",
-                    "display": "Japan"
-                },
-                {
-                    "reactKey": "yEwXcc",
-                    "value": "germany",
-                    "display": "Germany"
-                },
-                {
-                    "reactKey": "0qJSKt",
-                    "value": "india",
-                    "display": "India"
-                }
-            ]
-        }
-    },
-    {
-        "comp": "RadioList",
-        "isRequired": true,
-        "valuePath": "main.radioList",
-        "props": {
-            "id": "kh8dvv",
-            "label": "Radio list",
-            "sublabel": "Select a radio input",
-            "options": [
-                {
-                    "reactKey": "kCwnIj",
-                    "value": "mango",
-                    "display": "Mango"
-                },
-                {
-                    "reactKey": "DnqlBr",
-                    "value": "apple",
-                    "display": "Apple"
-                },
-                {
-                    "reactKey": "H7vPfc",
-                    "value": "oranges",
-                    "display": "Oranges"
-                }
-            ]
-        }
-    },
-    {
-        "comp": "DatePicker",
-        "isRequired": true,
-        "valuePath": "main.datePicker",
-        "props": {
-            "id": "xd0ijp",
-            "label": "Date Picker",
-            "sublabel": "Select Date"
-        }
-    },
-    {
-        "comp": "TextInput",
-        "isRequired": false,
-        "valuePath": "main.location",
-        "props": {
-            "id": "n9283z",
-            "label": "Location",
-            "sublabel": "Enter location"
-        }
-    }
-];
-
 function Form() {
+    const { data: formSchema, isLoading } = useQuery({ queryKey: ['formSchema'], queryFn: fetchFormSchema });
     return (
         <div className="Form">
             <h2>Form</h2>
-            {formSchema?.map((formItem, idx) => {
-                return <div key={idx} className="FormItem"><FormItem key={idx} item={formItem} /></div>
-            })}
+            {isLoading ? <Loader /> : <>
+                {formSchema?.data?.map((formItem, idx) => {
+                    return <div key={idx} className="FormItem">
+                        <FormItem key={idx} item={formItem} />
+                    </div>
+                })}
+            </>}
         </div>
     );
 }
@@ -137,14 +25,26 @@ function Form() {
 export default Form;
 
 
-function FormItem({ item }) {
 
-    const SelectedComponent = OolibComponents[item.comp];
-
-    if (SelectedComponent) {
-        return <SelectedComponent isRequired={item.isRequired} {...item.props} />;
-    }
-
-    // TODO: throw exception for invalid component
-    return <></>
+function Loader() {
+    return <>
+        <SkeletonLoader style={{
+            height: 30,
+            width: "70%"
+        }} />
+        <div style={{ margin: "20px" }}></div>
+        <SkeletonLoader style={{
+            height: 50,
+            width: "100%"
+        }} />
+        <div style={{ margin: "20px" }}></div>
+        <SkeletonLoader style={{
+            height: 20,
+            width: "90%"
+        }} /><div style={{ margin: "20px" }}></div>
+        <SkeletonLoader style={{
+            height: 80,
+            width: "100%"
+        }} />
+    </>
 }
