@@ -1,0 +1,12 @@
+.Form {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    text-align: left;
+}
+
+.FormItem {
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ececec;
+}
